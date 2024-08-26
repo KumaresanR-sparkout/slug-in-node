@@ -39,13 +39,25 @@ const analyticAggregation = async (req, res) => {
                     "viewDetails.is_deleted": 1
                 }
             },
-            // {
-            //     $group: {
-            //         _id: {
-            //             pid: "viewDetails.project_id"
-            //         }
-            //     }
-            // }
+            {
+                $addFields: {
+                    desktop: {
+                        $cond: {
+                            if: { $eq: ["$is_desktop", true] }
+                        },
+                        then: 1,
+                        else: 0
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        pid: "$projectId"
+                    },
+                    desktopCount: { $sum: "$desktop" }
+                }
+            }
         ])
 
         return res.json(analytics);

@@ -10,13 +10,13 @@ const compressImage = async (req, res) => {
             responseType: 'arraybuffer',
         });
         console.log(response.data);
-        const opath = path.join(process.cwd(), 'images', 'sampl.jpg');
+        const opath = path.join(process.cwd(), 'images', 'sampl.avif');
         sharp(response.data)
             .resize(800, 600, {
                 fit: 'inside',
                 withoutEnlargement: true,
             })
-            .jpeg({ quality: 80, progressive: true })
+            .avif({ quality: 80, progressive: true })
             .toFile(opath, (err, info) => {
                 if (err) {
                     console.log('image compress error:', err.message);

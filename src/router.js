@@ -4,7 +4,7 @@ const { compressImage } = require('./compress-image');
 const router = express.Router();
 
 
-router.get('/analytic', analyticAggregation);
+router.get("/analytic", analyticAggregation);
 router.get("/compress-image", compressImage);
 
 
