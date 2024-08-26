@@ -30,25 +30,36 @@ const analyticAggregation = async (req, res) => {
                     totalviews: 1,
                     totalclicks: 1,
                     totalsaves: 1,
-                    "viewDetails.project_id": 1,
-                    "viewDetails.is_direct_link": 1,
-                    "viewDetails.is_searched": 1,
-                    "viewDetails.is_mobile": 1,
-                    "viewDetails.is_tablet": 1,
-                    "viewDetails.is_desktop": 1,
-                    "viewDetails.is_deleted": 1
+                    ViewdProjectId: "$viewDetails.project_id",
+                    directLink: "$viewDetails.is_direct_link",
+                    isSearched: "$viewDetails.is_searched",
+                    isDetails: "$viewDetails.is_mobile",
+                    isTablet: "$viewDetails.is_tablet",
+                    isDesktop: "$viewDetails.is_desktop",
+                    isDeleted: "$viewDetails.is_deleted"
                 }
             },
             {
                 $addFields: {
                     desktop: {
-                        $cond: {
-                            if: { $eq: ["$is_desktop", true] }
-                        },
-                        then: 1,
-                        else: 0
+                        $map: {
+                            input: "$isDesktop",
+                            as: "item",
+                            in: {
+                                $cond: {
+                                    if: {
+                                        $eq: ["$$item", true]
+                                    },
+                                    then: 1,
+                                    else: 0
+                                }
+                            }
+                        }
                     }
                 }
+            },
+            {
+                $unwind: "$desktop"
             },
             {
                 $group: {
